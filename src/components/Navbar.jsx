@@ -1,13 +1,15 @@
+// CÓDIGO COMPLETO - OPÇÃO 2
+
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { name: "Home", href: "#hero" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Início", href: "#hero" },
+  { name: "Sobre", href: "#about" },
+  { name: "Habilidades", href: "#skills" },
+  { name: "Projetos", href: "#projects" },
+  { name: "Contato", href: "#contact" },
 ];
 
 export const Navbar = () => {
@@ -16,16 +18,18 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.screenY > 10);
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <nav
       className={cn(
-        "fixed w-full z40 transition-all duration-300",
+        "fixed w-full z-50 transition-all duration-300",
+        // A MÁGICA ACONTECE AQUI: Efeito "glass" apenas no scroll
         isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
       )}
     >
@@ -36,11 +40,11 @@ export const Navbar = () => {
         >
           <span className="relative z-10">
             <span className="text-glow text-foreground"> Henrique Borges</span>{" "}
-            Portifólio
+            Portfólio
           </span>
         </a>
 
-        {/* desktop nav */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex space-x-8">
           {navItems.map((item, key) => (
             <a
@@ -52,22 +56,26 @@ export const Navbar = () => {
             </a>
           ))}
         </div>
-        {/* mobile nav */}
 
-          <button onClick={() => setIsMenuOpen((prev) => !prev)} 
+        {/* Mobile Nav Toggle */}
+        <button
+          onClick={() => setIsMenuOpen((prev) => !prev)}
           className="md:hidden p-2 text-foreground z-50"
-          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}> 
-            {isMenuOpen ? <X size={24}/> : <Menu size={24}/>}{" "}
-          </button>
+          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
-        <div className={cn(
+        {/* Mobile Menu Overlay - Mantendo o efeito glass para consistência */}
+        <div
+          className={cn(
             "fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center",
-            "transition-all duration-300 md:hidden",
-            isMenuOpen 
-            ? "opacity-100 pointer-events-auto" 
-            : "opacity-0 pointer-events-none"
-            )}
-            >
+            "transition-opacity duration-300 md:hidden",
+            isMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          )}
+        >
           <div className="flex flex-col space-y-8 text-xl">
             {navItems.map((item, key) => (
               <a
